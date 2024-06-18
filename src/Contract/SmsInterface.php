@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace HyperfLibraries\Sms\Contract;
 
 use Closure;
-use HyperfLibraries\Sms\Contract\MessageInterface;
 use HyperfLibraries\Sms\Exception\InvalidArgumentException;
 use HyperfLibraries\Sms\Exception\NoGatewayAvailableException;
 

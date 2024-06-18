@@ -3,6 +3,7 @@
 declare(strict_types=1);
 /**
  * http 基础请求
+ *
  * @link     http://www.swoole.red
  * @contact  1712715552@qq.com
  */
@@ -11,7 +12,7 @@ namespace HyperfLibraries\Sms;
 
 use Hyperf\Guzzle\ClientFactory;
 use Psr\Http\Message\ResponseInterface;
-use Hyperf\Utils\ApplicationContext;
+use Hyperf\Context\ApplicationContext;
 
 trait HasHttpRequest
 {
@@ -28,9 +29,10 @@ trait HasHttpRequest
     {
         return $this->request('get', $endpoint, [
             'headers' => $headers,
-            'query' => $query,
+            'query'   => $query,
         ]);
     }
+
     /**
      * Make a post request.
      *
@@ -43,10 +45,11 @@ trait HasHttpRequest
     protected function post($endpoint, $params = [], $headers = [])
     {
         return $this->request('post', $endpoint, [
-            'headers' => $headers,
+            'headers'     => $headers,
             'form_params' => $params,
         ]);
     }
+
     /**
      * Make a post request with json params.
      *
@@ -60,15 +63,16 @@ trait HasHttpRequest
     {
         return $this->request('post', $endpoint, [
             'headers' => $headers,
-            'json' => $params,
+            'json'    => $params,
         ]);
     }
+
     /**
      * Make a http request.
      *
      * @param string $method
      * @param string $endpoint
-     * @param array  $options  http://docs.guzzlephp.org/en/latest/request-options.html
+     * @param array  $options http://docs.guzzlephp.org/en/latest/request-options.html
      *
      * @return array
      */
@@ -76,6 +80,7 @@ trait HasHttpRequest
     {
         return $this->unwrapResponse($this->getHttpClient($this->getBaseOptions())->{$method}($endpoint, $options));
     }
+
     /**
      * Return base Guzzle options.
      *
@@ -85,10 +90,11 @@ trait HasHttpRequest
     {
         $options = [
             'base_uri' => \method_exists($this, 'getBaseUri') ? $this->getBaseUri() : '',
-            'timeout' => \method_exists($this, 'getTimeout') ? $this->getTimeout() : 5.0,
+            'timeout'  => \method_exists($this, 'getTimeout') ? $this->getTimeout() : 5.0,
         ];
         return $options;
     }
+
     /**
      * Return http ClientFactory.
      *
@@ -104,6 +110,7 @@ trait HasHttpRequest
         $container = ApplicationContext::getContainer();
         return $container->get(ClientFactory::class)->create($options);
     }
+
     /**
      * Convert response contents to json.
      *
@@ -114,7 +121,7 @@ trait HasHttpRequest
     protected function unwrapResponse(ResponseInterface $response)
     {
         $contentType = $response->getHeaderLine('Content-Type');
-        $contents = $response->getBody()->getContents();
+        $contents    = $response->getBody()->getContents();
         if (false !== stripos($contentType, 'json') || stripos($contentType, 'javascript')) {
             return \json_decode($contents, true);
         } elseif (false !== stripos($contentType, 'xml')) {
